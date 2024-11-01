@@ -53,8 +53,8 @@ def verificar_token_no_banco(user_id):
     return False
 
 # Obter o user_id diretamente dos parâmetros da URL
-query_params = st.query_params
-user_id = query_params.get("user_id", [None])[0]  # Força a leitura direta da URL
+query_params = st.experimental_get_query_params()
+user_id = query_params.get("user_id", [None])[0]  # Força a leitura direta da URL, garantindo que pegamos o `user_id` correto
 
 st.write("User ID recebido da URL:", user_id)
 
