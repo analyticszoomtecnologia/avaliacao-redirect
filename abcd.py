@@ -22,7 +22,8 @@ def conectar_banco():
         access_token=DB_ACCESS_TOKEN
     )
 
-parsed_url = st.experimental_get_query_params()
+
+parsed_url = st.query_params  # Usa st.query_params em vez de st.experimental_get_query_params
 token = parsed_url.get("token", [None])[0]
 
 if token:
