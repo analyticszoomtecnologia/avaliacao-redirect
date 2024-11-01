@@ -35,7 +35,13 @@ def verificar_token_no_banco(user_id):
     resultado = cursor.fetchone()
     cursor.close()
     connection.close()
-    return resultado
+    
+    if resultado:
+        token, created_at = resultado
+        # Considera o token válido por 1 hora (ou ajuste conforme necessário)
+        if datetime.strptime(created_at, '%Y-%m-%d %H:%M:%S') > datetime.now() - timedelta(hours=1):
+            return True
+    return False
 
 # Obtém o user_id da URL
 user_id = st.query_params.get("user_id", [None])[0]
