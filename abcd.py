@@ -2,7 +2,7 @@ import streamlit as st
 import jwt
 import urllib.parse as urlparse
 from databricks import sql
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import os
 import pandas as pd
@@ -44,8 +44,8 @@ def verificar_token_no_banco(user_id):
         st.write("Token recuperado:", token)
         st.write("Data de criação do token (timestamp):", created_at)
         
-        # Considera o token válido por 1 hora (ou ajuste conforme necessário)
-        token_valido = created_at > datetime.now() - timedelta(hours=1)
+        # Considera o token válido por 1 hora (ajusta para fuso horário UTC)
+        token_valido = created_at > datetime.now(timezone.utc) - timedelta(hours=1)
         st.write("Token válido?", token_valido)
         return token_valido
     else:
@@ -53,7 +53,7 @@ def verificar_token_no_banco(user_id):
     return False
 
 # Obter o user_id diretamente dos parâmetros da URL
-query_params = st.experimental_get_query_params()
+query_params = st.query_params
 user_id = query_params.get("user_id", [None])[0]  # Força a leitura direta da URL
 
 st.write("User ID recebido da URL:", user_id)
