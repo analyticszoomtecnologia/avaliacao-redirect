@@ -29,6 +29,8 @@ def verificar_token_no_banco(user_id):
         SELECT token, created_at
         FROM datalake.avaliacao_abcd.tokens
         WHERE user_id = '{user_id}'
+        ORDER BY created_at DESC
+        LIMIT 1
     """)
     resultado = cursor.fetchone()
     cursor.close()
