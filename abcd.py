@@ -36,21 +36,29 @@ def verificar_token_no_banco(user_id):
     cursor.close()
     connection.close()
     
+    # Log para depuração
+    st.write("Resultado da consulta de token:", resultado)
+    
     if resultado:
         token, created_at = resultado
+        st.write("Token recuperado:", token)
+        st.write("Data de criação do token (timestamp):", created_at)
+        
         # Considera o token válido por 1 hora (ou ajuste conforme necessário)
-        if datetime.strptime(created_at, '%Y-%m-%d %H:%M:%S') > datetime.now() - timedelta(hours=1):
-            return True
+        token_valido = created_at > datetime.now() - timedelta(hours=1)
+        st.write("Token válido?", token_valido)
+        return token_valido
+    else:
+        st.write("Nenhum token encontrado para o usuário.")
     return False
 
 # Obtém o user_id da URL
 user_id = st.query_params.get("user_id", [None])[0]
 
+st.write("User ID recebido:", user_id)
+
 if user_id:
-    token_data = verificar_token_no_banco(user_id)
-    
-    if token_data:
-        token, created_at = token_data
+    if verificar_token_no_banco(user_id):
         st.write(f"Bem-vindo, usuário ID: {user_id}")
         
         # Carregar dados específicos do usuário com base no user_id
@@ -58,7 +66,7 @@ if user_id:
             connection = conectar_banco()
             cursor = connection.cursor()
             cursor.execute(f"""
-                SELECT * FROM datalake.avaliacao_abcd.login
+                SELECT * FROM datalake.avaliacao_abcd.users  -- Atualize o nome da tabela aqui
                 WHERE user_id = '{user_id}'
             """)
             dados = cursor.fetchall()
