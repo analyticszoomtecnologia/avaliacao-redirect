@@ -52,38 +52,6 @@ def verificar_token_no_banco(id_emp):
         st.write("Nenhum token encontrado para o usuário.")
     return False
 
-# Obter o `id_emp` diretamente dos parâmetros da URL
-query_params = st.experimental_get_query_params()  # Garantir que estamos pegando o ID direto da URL
-id_emp = query_params.get("user_id", [None])[0]  # Usa `user_id` dos parâmetros da URL
-
-st.write("ID do usuário recebido da URL:", id_emp)
-
-if id_emp:
-    if verificar_token_no_banco(id_emp):  # Usa `id_emp` diretamente
-        st.write(f"Bem-vindo, usuário ID: {id_emp}")
-        
-        # Carregar dados específicos do usuário a partir da tabela `avaliacao_abcd`
-        def carregar_dados_usuario(id_emp):
-            connection = conectar_banco()
-            cursor = connection.cursor()
-            cursor.execute(f"""
-                SELECT * FROM datalake.avaliacao_abcd.avaliacao_abcd  -- Certifique-se de que o nome da tabela e o schema estão corretos
-                WHERE id_emp = '{id_emp}'
-            """)
-            dados = cursor.fetchall()
-            cursor.close()
-            connection.close()
-            return dados
-
-        dados_usuario = carregar_dados_usuario(id_emp)
-        st.write("Dados do usuário:")
-        st.write(dados_usuario)
-
-    else:
-        st.error("Acesso negado: token inválido ou expirado.")
-else:
-    st.error("ID de usuário não encontrado.")
-
 
 # Função para buscar colaboradores da tabela dim_employee
 def buscar_colaboradores():
@@ -628,4 +596,20 @@ def abcd_page():
     else:
         st.error("Não foi possível conectar ao banco de dados.")
 
-abcd_page()
+# Obter o `id_emp` diretamente dos parâmetros da URL
+query_params = st.experimental_get_query_params()  # Garantir que estamos pegando o ID direto da URL
+id_emp = query_params.get("user_id", [None])[0]  # Usa `user_id` dos parâmetros da URL
+
+st.write("ID do usuário recebido da URL:", id_emp)
+
+if id_emp:
+    if verificar_token_no_banco(id_emp):  # Usa `id_emp` diretamente
+        st.write(f"Bem-vindo, usuário ID: {id_emp}")
+        
+        # Renderizar a página `abcd_page` se o token for válido
+        abcd_page()  # Chama a função abcd_page diretamente após a validação
+
+    else:
+        st.error("Acesso negado: token inválido ou expirado.")
+else:
+    st.error("ID de usuário não encontrado.")
