@@ -66,7 +66,7 @@ if user_id:
             connection = conectar_banco()
             cursor = connection.cursor()
             cursor.execute(f"""
-                SELECT * FROM datalake.avaliacao_abcd.tokens  -- Atualize o nome da tabela aqui
+                SELECT * FROM datalake.avaliacao_abcd.avaliacao_abcd  -- Atualize o nome da tabela aqui
                 WHERE user_id = '{user_id}'
             """)
             dados = cursor.fetchall()
