@@ -527,6 +527,7 @@ def abcd_page():
                 st.write("Todos os funcionários já foram avaliados.")
         else:
             st.write("Nenhum subordinado encontrado.")
+        
 
     # Função para listar avaliações já realizadas e incluir a coluna de Quarter
     def listar_avaliados_subordinados(conn, quarter=None):
@@ -570,19 +571,7 @@ def abcd_page():
         cursor.close()
         return df
     
-    st.markdown(
-        """
-        <br><hr>
-        <div style='text-align: center;'>
-            Desenvolvido por 
-            <a href='https://www.linkedin.com/in/gabriel-cordeiro-033641144/' target='_blank' style='text-decoration: none; color: #0A66C2;'>
-                <img src='https://upload.wikimedia.org/wikipedia/commons/f/f8/LinkedIn_icon_circle.svg' alt='LinkedIn' width='20' style='vertical-align: middle; margin-right: 5px;' />
-                Gabriel Cordeiro
-            </a>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    
 
     # Seção da página que lista as avaliações realizadas
     st.subheader("Avaliações Realizadas")
@@ -625,3 +614,17 @@ if id_emp:
         st.error("Acesso negado: token inválido ou expirado.")
 else:
     st.error("ID de usuário não encontrado.")
+
+st.markdown(
+        """
+        <br><hr>
+        <div style='text-align: center;'>
+            Desenvolvido por 
+            <a href='https://www.linkedin.com/in/gabriel-cordeiro-033641144/' target='_blank' style='text-decoration: none; color: #0A66C2;'>
+                <img src='https://upload.wikimedia.org/wikipedia/commons/f/f8/LinkedIn_icon_circle.svg' alt='LinkedIn' width='20' style='vertical-align: middle; margin-right: 5px;' />
+                Gabriel Cordeiro
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
