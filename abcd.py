@@ -37,16 +37,13 @@ def verificar_token_no_banco(id_emp):
     connection.close()
     
     # Log para depuração
-    st.write("Resultado da consulta de token:", resultado)
     
     if resultado:
         token, created_at = resultado
-        st.write("Token recuperado:", token)
-        st.write("Data de criação do token (timestamp):", created_at)
         
         # Considera o token válido por 1 hora (ajusta para fuso horário UTC)
         token_valido = created_at > datetime.now(timezone.utc) - timedelta(hours=1)
-        st.write("Token válido?", token_valido)
+
         return token_valido
     else:
         st.write("Nenhum token encontrado para o usuário.")
@@ -600,14 +597,12 @@ def abcd_page():
 query_params = st.experimental_get_query_params()  # Garantir que estamos pegando o ID direto da URL
 id_emp = query_params.get("user_id", [None])[0]  # Usa `user_id` dos parâmetros da URL
 
-st.write("ID do usuário recebido da URL:", id_emp)
-
 # Verifique se o usuário está logado e se o token é válido
 if id_emp:
     if verificar_token_no_banco(id_emp):  # Usa `id_emp` diretamente
         st.session_state['logged_in'] = True  # Defina o usuário como logado
         st.session_state['id_emp'] = id_emp  # Armazena o id_emp no session state
-        st.write(f"Bem-vindo, usuário ID: {id_emp}")
+
         
         # Renderizar a página `abcd_page` se o token for válido
         abcd_page()  # Chama a função abcd_page diretamente após a validação
