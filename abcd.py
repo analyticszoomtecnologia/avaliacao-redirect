@@ -22,15 +22,27 @@ def conectar_banco():
         access_token=DB_ACCESS_TOKEN
     )
 
+def verificar_token_no_banco(user_id):
+    connection = conectar_banco()
+    cursor = connection.cursor()
+    cursor.execute(f"""
+        SELECT token, created_at
+        FROM datalake.avaliacao_abcd.tokens
+        WHERE user_id = '{user_id}'
+    """)
+    resultado = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return resultado
 
-token = st.query_params.get("token", [None])[0]
+# Obtém o user_id da URL
+user_id = st.query_params.get("user_id", [None])[0]
 
-if token:
-    try:
-        # Decodifica o token para obter o ID do usuário
-        decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
-        user_id = decoded_token["user_id"]
-        
+if user_id:
+    token_data = verificar_token_no_banco(user_id)
+    
+    if token_data:
+        token, created_at = token_data
         st.write(f"Bem-vindo, usuário ID: {user_id}")
         
         # Carregar dados específicos do usuário com base no user_id
@@ -47,14 +59,12 @@ if token:
             return dados
 
         dados_usuario = carregar_dados_usuario(user_id)
-        st.write(dados_usuario)  # Exibe os dados do usuário
+        st.write(dados_usuario)
 
-    except jwt.ExpiredSignatureError:
-        st.error("O link expirou. Por favor, faça login novamente.")
-    except jwt.InvalidTokenError:
-        st.error("Token inválido. Acesso negado.")
+    else:
+        st.error("Acesso negado: token inválido ou expirado.")
 else:
-    st.error("Token não encontrado. Acesso negado.")
+    st.error("ID de usuário não encontrado.")
 
 
 # Função para buscar colaboradores da tabela dim_employee
