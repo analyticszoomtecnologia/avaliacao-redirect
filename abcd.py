@@ -52,21 +52,22 @@ def verificar_token_no_banco(user_id):
         st.write("Nenhum token encontrado para o usuário.")
     return False
 
-# Obtém o user_id da URL
-user_id = st.query_params.get("user_id", [None])[0]
+# Obter o user_id diretamente dos parâmetros da URL
+query_params = st.experimental_get_query_params()
+user_id = query_params.get("user_id", [None])[0]  # Força a leitura direta da URL
 
-st.write("User ID recebido:", user_id)
+st.write("User ID recebido da URL:", user_id)
 
 if user_id:
     if verificar_token_no_banco(user_id):
         st.write(f"Bem-vindo, usuário ID: {user_id}")
         
-        # Carregar dados específicos do usuário com base no user_id
+        # Carregar dados específicos do usuário a partir da tabela `avaliacao_abcd`
         def carregar_dados_usuario(user_id):
             connection = conectar_banco()
             cursor = connection.cursor()
             cursor.execute(f"""
-                SELECT * FROM datalake.avaliacao_abcd.avaliacao_abcd  -- Atualize o nome da tabela aqui
+                SELECT * FROM datalake.avaliacao_abcd.avaliacao_abcd  -- Atualize com o schema correto
                 WHERE user_id = '{user_id}'
             """)
             dados = cursor.fetchall()
@@ -75,6 +76,7 @@ if user_id:
             return dados
 
         dados_usuario = carregar_dados_usuario(user_id)
+        st.write("Dados do usuário:")
         st.write(dados_usuario)
 
     else:
