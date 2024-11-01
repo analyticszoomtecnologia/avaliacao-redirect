@@ -22,13 +22,13 @@ def conectar_banco():
         access_token=DB_ACCESS_TOKEN
     )
 
-def verificar_token_no_banco(user_id):
+def verificar_token_no_banco(id_emp):
     connection = conectar_banco()
     cursor = connection.cursor()
     cursor.execute(f"""
         SELECT token, created_at
         FROM datalake.avaliacao_abcd.tokens
-        WHERE user_id = '{user_id}'
+        WHERE user_id = '{id_emp}'
         ORDER BY created_at DESC
         LIMIT 1
     """)
@@ -52,14 +52,14 @@ def verificar_token_no_banco(user_id):
         st.write("Nenhum token encontrado para o usuário.")
     return False
 
-# Obter o user_id diretamente dos parâmetros da URL
-query_params = st.query_params
-id_emp = query_params.get("user_id", [None])[0]  # Nome atualizado para refletir `id_emp`
+# Obter o `id_emp` diretamente dos parâmetros da URL
+query_params = st.experimental_get_query_params()  # Garantir que estamos pegando o ID direto da URL
+id_emp = query_params.get("user_id", [None])[0]  # Usa `user_id` dos parâmetros da URL
 
 st.write("ID do usuário recebido da URL:", id_emp)
 
 if id_emp:
-    if verificar_token_no_banco(id_emp):
+    if verificar_token_no_banco(id_emp):  # Usa `id_emp` diretamente
         st.write(f"Bem-vindo, usuário ID: {id_emp}")
         
         # Carregar dados específicos do usuário a partir da tabela `avaliacao_abcd`
@@ -67,7 +67,7 @@ if id_emp:
             connection = conectar_banco()
             cursor = connection.cursor()
             cursor.execute(f"""
-                SELECT * FROM datalake.avaliacao_abcd.avaliacao_abcd
+                SELECT * FROM datalake.avaliacao_abcd.avaliacao_abcd  -- Certifique-se de que o nome da tabela e o schema estão corretos
                 WHERE id_emp = '{id_emp}'
             """)
             dados = cursor.fetchall()
