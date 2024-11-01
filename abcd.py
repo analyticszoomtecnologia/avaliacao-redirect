@@ -50,7 +50,7 @@ if user_id:
             connection = conectar_banco()
             cursor = connection.cursor()
             cursor.execute(f"""
-                SELECT * FROM tabela_dados_usuario
+                SELECT * FROM datalake.avaliacao_abcd.login
                 WHERE user_id = '{user_id}'
             """)
             dados = cursor.fetchall()
