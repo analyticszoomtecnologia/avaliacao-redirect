@@ -23,14 +23,14 @@ def conectar_banco():
     )
 
 
-parsed_url = st.query_params  # Usa st.query_params em vez de st.experimental_get_query_params
-token = parsed_url.get("token", [None])[0]
+token = st.query_params.get("token", [None])[0]
 
 if token:
     try:
         # Decodifica o token para obter o ID do usuário
         decoded_token = jwt.decode(token, secret_key, algorithms=["HS256"])
         user_id = decoded_token["user_id"]
+        
         st.write(f"Bem-vindo, usuário ID: {user_id}")
         
         # Carregar dados específicos do usuário com base no user_id
