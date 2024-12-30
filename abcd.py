@@ -243,14 +243,7 @@ def abcd_page():
         st.error("Você precisa fazer login para acessar essa página.")
         return
     
-    with st.sidebar:
-        # Botão "Voltar"
-        if st.button("Voltar"):
-            # Redireciona para a página com o ID do usuário como parâmetro
-            st.markdown(f"""
-                <meta http-equiv="refresh" content="0; url=https://ferramenta-de-gestao-abcd.streamlit.app/?user_id={user_id}">
-            """, unsafe_allow_html=True)
-            
+    with st.sidebar:            
         if st.button("Sair"):
             logout()
 
