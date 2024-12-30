@@ -6,6 +6,10 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import os
 import pandas as pd
+from login import login_page
+from func_data import func_data_page
+from alter_nota import func_data_nota
+from st_pages import hide_pages
 
 load_dotenv()
 DB_SERVER_HOSTNAME = os.getenv("DB_SERVER_HOSTNAME")
