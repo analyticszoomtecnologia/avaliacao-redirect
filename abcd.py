@@ -82,10 +82,10 @@ def main():
     st.sidebar.title("Navegação")
     pagina_selecionada = st.sidebar.selectbox(
         "Escolha a página",
-        ["Avaliação ABCD", "Gerenciar Funcionários", "Lista de Avaliados"]
+        ["Avaliação ABCD", "Funcionários Data", "Lista de Avaliados"]
     )
 
-    if pagina_selecionada == "Gerenciar Funcionários":
+    if pagina_selecionada == "Funcionários Data":
         func_data_page()
     elif pagina_selecionada == "Lista de Avaliados":
         func_data_nota()
