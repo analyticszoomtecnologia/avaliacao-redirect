@@ -246,10 +246,10 @@ def abcd_page():
     with st.sidebar:
         # Botão "Voltar"
         if st.button("Voltar"):
-        # Redireciona para a página com o ID do usuário como parâmetro
-        st.markdown(f"""
-            <meta http-equiv="refresh" content="0; url=https://ferramenta-de-gestao-abcd.streamlit.app/?user_id={user_id}">
-    """, unsafe_allow_html=True)
+            # Redireciona para a página com o ID do usuário como parâmetro
+            st.markdown(f"""
+                <meta http-equiv="refresh" content="0; url=https://ferramenta-de-gestao-abcd.streamlit.app/?user_id={user_id}">
+            """, unsafe_allow_html=True)
             
         if st.button("Sair"):
             logout()
