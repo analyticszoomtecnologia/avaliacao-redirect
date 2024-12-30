@@ -6,8 +6,7 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import os
 import pandas as pd
-from func_data import func_data_page
-from alter_nota import func_data_nota
+import webbrowser
 
 load_dotenv()
 DB_SERVER_HOSTNAME = os.getenv("DB_SERVER_HOSTNAME")
@@ -76,25 +75,6 @@ def logout():
     st.session_state.clear()  # Limpa todo o session_state
     st.success("Você saiu com sucesso!")
     st.stop()
-
-# Função principal para a navegação
-def main():
-    
-    # Menu de navegação
-    st.sidebar.title("Navegação")
-    pagina_selecionada = st.sidebar.selectbox(
-        "Escolha a página",
-        ["Avaliação ABCD", "Funcionários Data", "Lista de Avaliados"]
-    )
-
-    if pagina_selecionada == "Funcionários Data":
-        func_data_page()
-    elif pagina_selecionada == "Lista de Avaliados":
-        func_data_nota()
-
-# Chamando a função principal
-if __name__ == "__main__":
-    main()
 
 # Função para buscar o id do gestor selecionado
 def buscar_id_gestor(nome_gestor):
@@ -264,6 +244,10 @@ def abcd_page():
         return
     
     with st.sidebar:
+        # Adiciona botão "Voltar"
+        if st.button("Voltar"):
+            webbrowser.open_new_tab("https://ferramenta-de-gestao-abcd.streamlit.app/")
+            
         if st.button("Sair"):
             logout()
 
