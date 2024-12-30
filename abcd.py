@@ -6,7 +6,6 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import os
 import pandas as pd
-from st_pages import hide_pages
 
 load_dotenv()
 DB_SERVER_HOSTNAME = os.getenv("DB_SERVER_HOSTNAME")
@@ -76,31 +75,13 @@ def logout():
     st.success("Você saiu com sucesso!")
     st.stop()
 
-link_abcd_base = "https://avaliacao-redirect.streamlit.app/"  
-
-if 'logged_in' not in st.session_state:
-    st.session_state['logged_in'] = False
-
-if not st.session_state['logged_in']:
-    hide_pages(["Avaliação ABCD", "Funcionários Data", "Lista de Avaliados"])
-    login_page()
-else:
-    hide_pages([])
-
     st.sidebar.title("Navegação")
     pagina_selecionada = st.sidebar.selectbox(
         "Escolha a página",
         ["Avaliação ABCD", "Funcionários Data", "Lista de Avaliados"]
     )
 
-    if pagina_selecionada == "Avaliação ABCD":
-        user_id = st.session_state["id_emp"]
-        link_abcd = f"{link_abcd_base}?user_id={urllib.parse.quote(str(user_id))}"
-
-        #st.write("Redirecionando para a página principal...")
-        st.markdown(f"[Clique aqui para Realizar Avaliação.]({link_abcd})", unsafe_allow_html=True)
-
-    elif pagina_selecionada == "Funcionários Data":
+    if pagina_selecionada == "Funcionários Data":
         func_data_page()
     elif pagina_selecionada == "Lista de Avaliados":
         func_data_nota()
