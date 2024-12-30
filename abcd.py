@@ -246,10 +246,7 @@ def abcd_page():
     with st.sidebar:
         # Botão "Voltar"
         if st.button("Voltar"):
-            # Adiciona um redirecionamento direto usando HTML
-            st.markdown("""
-                <meta http-equiv="refresh" content="0; url=https://ferramenta-de-gestao-abcd.streamlit.app/">
-            """, unsafe_allow_html=True)
+            st.redirect("https://ferramenta-de-gestao-abcd.streamlit.app/")
             
         if st.button("Sair"):
             logout()
