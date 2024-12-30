@@ -75,6 +75,30 @@ def logout():
     st.success("Você saiu com sucesso!")
     st.stop()
 
+# Função principal para a navegação
+def main():
+    st.sidebar.title("Menu de Ações")
+
+    # Botão de logout
+    if st.sidebar.button("Logout"):
+        logout()
+
+    # Menu de navegação
+    st.sidebar.title("Navegação")
+    pagina_selecionada = st.sidebar.selectbox(
+        "Escolha a página",
+        ["Avaliação ABCD", "Funcionários Data", "Lista de Avaliados"]
+    )
+
+    if pagina_selecionada == "Funcionários Data":
+        func_data_page()
+    elif pagina_selecionada == "Lista de Avaliados":
+        func_data_nota()
+
+# Chamando a função principal
+if __name__ == "__main__":
+    main()
+
 # Função para buscar o id do gestor selecionado
 def buscar_id_gestor(nome_gestor):
     connection = conectar_banco()
