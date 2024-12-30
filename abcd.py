@@ -75,17 +75,6 @@ def logout():
     st.success("Você saiu com sucesso!")
     st.stop()
 
-    st.sidebar.title("Navegação")
-    pagina_selecionada = st.sidebar.selectbox(
-        "Escolha a página",
-        ["Avaliação ABCD", "Funcionários Data", "Lista de Avaliados"]
-    )
-
-    if pagina_selecionada == "Funcionários Data":
-        func_data_page()
-    elif pagina_selecionada == "Lista de Avaliados":
-        func_data_nota()
-
 # Função para buscar o id do gestor selecionado
 def buscar_id_gestor(nome_gestor):
     connection = conectar_banco()
