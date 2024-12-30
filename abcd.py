@@ -6,8 +6,6 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 import os
 import pandas as pd
-import func_data
-import alter_nota
 
 load_dotenv()
 DB_SERVER_HOSTNAME = os.getenv("DB_SERVER_HOSTNAME")
