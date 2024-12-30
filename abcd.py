@@ -77,12 +77,7 @@ def logout():
 
 # Função principal para a navegação
 def main():
-    st.sidebar.title("Menu de Ações")
-
-    # Botão de logout
-    if st.sidebar.button("Logout"):
-        logout()
-
+    
     # Menu de navegação
     st.sidebar.title("Navegação")
     pagina_selecionada = st.sidebar.selectbox(
