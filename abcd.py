@@ -180,7 +180,7 @@ def buscar_funcionarios_subordinados():
 
             # Busca os funcionários subordinados diretos
             cursor.execute(f"""
-                SELECT id, Nome, Setor, Gestor_Direto
+                SELECT id, Nome
                 FROM datalake.silver_pny.func_zoom
                 WHERE Gestor_Direto = '{nome_gestor}' OR Diretor_Gestor = '{nome_gestor}'
             """)
@@ -189,8 +189,8 @@ def buscar_funcionarios_subordinados():
             cursor.close()
             connection.close()
 
-            # Retorna os funcionários como um dicionário
-            return {row['id']: row['Nome'] for row in funcionarios}
+            # Retorna os funcionários como um dicionário {id: nome}
+            return {row[0]: row[1] for row in funcionarios}
 
     return {}
 
@@ -389,21 +389,28 @@ def abcd_page():
         st.session_state['diretoria'] = ""
         st.session_state['data_resposta'] = datetime.today()
 
-    st.header("Preencha as informações abaixo:")
-
-    # Buscar colaboradores e subordinados
-    colaboradores_data = buscar_colaboradores()
-    subordinados_data = buscar_funcionarios_subordinados()
-
     # Inputs de informações do colaborador
-    cols_inputs = st.columns(2)
-
-    with cols_inputs[0]:
-        nome_colaborador = st.selectbox("Nome do Colaborador", options=[""] + list(colaboradores_data.keys()))
-        if nome_colaborador:
-            id_emp = colaboradores_data[nome_colaborador]['id']
-        else:
-            id_emp = None
+    st.header("Preencha as informações abaixo:")
+    subordinados_data = buscar_funcionarios_subordinados()
+    
+    # Certifique-se de que existem subordinados disponíveis
+    if subordinados_data:
+        # Listando apenas os subordinados do gestor logado
+        nome_colaborador = st.selectbox(
+            "Nome do Colaborador",
+            options=[""] + list(subordinados_data.values()),
+            format_func=lambda x: x if x else "Selecione um colaborador"
+        )
+    
+    # Recuperando o id_emp do colaborador selecionado
+    if nome_colaborador:
+        id_emp = next(key for key, value in subordinados_data.items() if value == nome_colaborador)
+    else:
+        id_emp = None
+    else:
+        st.error("Nenhum subordinado encontrado para o gestor logado.")
+        nome_colaborador = None
+        id_emp = None
 
     with cols_inputs[1]:
         nome_gestor = st.text_input("Líder Direto", value=colaboradores_data[nome_colaborador]['gestor'] if nome_colaborador else "", disabled=True)
