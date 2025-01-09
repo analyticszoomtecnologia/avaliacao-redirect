@@ -403,14 +403,16 @@ def abcd_page():
         )
     
     # Recuperando o id_emp do colaborador selecionado
-    if nome_colaborador:
-        id_emp = next(key for key, value in subordinados_data.items() if value == nome_colaborador)
-    else:
+    if subordinados_data:  # Verifica se há subordinados disponíveis
+    if nome_colaborador:  # Verifica se um colaborador foi selecionado
+        id_emp = next((key for key, value in subordinados_data.items() if value == nome_colaborador), None)
+    else:  # Nenhum colaborador foi selecionado
         id_emp = None
-    else:
-        st.error("Nenhum subordinado encontrado para o gestor logado.")
-        nome_colaborador = None
-        id_emp = None
+elif not subordinados_data:  # Caso não haja subordinados para o gestor logado
+    st.error("Nenhum subordinado encontrado para o gestor logado.")
+    nome_colaborador = None
+    id_emp = None
+
 
     with cols_inputs[1]:
         nome_gestor = st.text_input("Líder Direto", value=colaboradores_data[nome_colaborador]['gestor'] if nome_colaborador else "", disabled=True)
