@@ -43,7 +43,7 @@ def verificar_token_no_banco(id_emp):
         token, created_at = resultado
         
         # Considera o token válido por 1 hora (ajusta para fuso horário UTC)
-        token_valido = created_at > datetime.now(timezone.utc) - timedelta(hours=1)
+        token_valido = created_at > datetime.now(timezone.utc) - timedelta(hours=48)
 
         return token_valido
     else:
@@ -55,25 +55,25 @@ def verificar_token_no_banco(id_emp):
 def buscar_colaboradores():
     connection = conectar_banco()
     cursor = connection.cursor()
+    user_id = st.session_state.get('id_emp', None)
     cursor.execute("""
-        SELECT
-            fz.id AS id_employee,
-            fz.Nome AS nm_employee,
-            fz.Setor AS nm_departament,
-            fz.Gestor_Direto AS nm_gestor,
-            fz.Diretor_Gestor AS nm_diretor,
-            fz.Diretoria AS nm_diretoria,
-            lt.nome AS nomeLogin
-        FROM
-            datalake.silver_pny.func_zoom fz
-        JOIN
-            datalake.avaliacao_abcd.login lt
-        ON
-            fz.Diretor_Gestor = lt.Nome
-        WHERE
-            user_id = lt.id_emp
-            ORDER BY fz.Nome ASC;
-    """)
+            SELECT
+                id AS id_employee,
+                Nome AS nm_employee,
+                Setor AS nm_departament,
+                Gestor_Direto AS nm_gestor,
+                Diretor_Gestor AS nm_diretor,
+                Diretoria AS nm_diretoria
+            FROM
+                datalake.silver_pny.func_zoom
+            WHERE
+                Diretor_Gestor = (
+                    SELECT Diretor_Gestor
+                    FROM datalake.silver_pny.func_zoom
+                    WHERE id = %s
+                )
+                    ORDER BY Nome ASC
+    """ % (user_id)) 
     colaboradores = cursor.fetchall()
     cursor.close()
     connection.close()
