@@ -66,7 +66,7 @@ def buscar_colaboradores():
         FROM datalake.silver_pny.func_zoom
         JOIN login
         ON func_zoom.Diretor_Gestor = login.Nome 
-        WHERE login.id_emp = {id_emp};
+        WHERE login.id_emp = '{id_emp}';
     """)
     colaboradores = cursor.fetchall()
     cursor.close()
