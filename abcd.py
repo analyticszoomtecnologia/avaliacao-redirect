@@ -64,18 +64,19 @@ def buscar_colaboradores():
     # Consulta para obter os colaboradores cujo Diretor_Gestor seja o diretor logado
     cursor.execute(f"""
         SELECT
-          id AS id_employee,
-          Nome AS nm_employee,
-          Setor AS nm_departament,
-          Gestor_Direto AS nm_gestor,
-          Diretor_Gestor AS nm_diretor,
-          Diretoria AS nm_diretoria
+            id AS id_employee,
+            Nome AS nm_employee,
+            Setor AS nm_departament,
+            Gestor_Direto AS nm_gestor,
+            Diretor_Gestor AS nm_diretor,
+            Diretoria AS nm_diretoria
         FROM
-          datalake.silver_pny.func_zoom
-        WHERE Diretor_Gestor = (
-            SELECT Nome
-            FROM datalake.silver_pny.func_zoom
-            WHERE Diretor_Gestor = 'Grasiele Bof'
+            datalake.silver_pny.func_zoom
+        WHERE Diretor_Gestor IN (
+        SELECT DISTINCT Nome
+        FROM datalake.silver_pny.func_zoom
+        WHERE Diretor_Gestor = 'Grasiele Bof'
+            )
         )
     """)
 
