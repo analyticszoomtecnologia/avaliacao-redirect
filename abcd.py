@@ -71,7 +71,7 @@ def buscar_colaboradores():
         ON
             fz.Diretor_Gestor = lt.Nome
         WHERE
-            lt.id_emp = 75
+            user_id = lt.id_emp
             ORDER BY fz.Nome ASC;
     """)
     colaboradores = cursor.fetchall()
