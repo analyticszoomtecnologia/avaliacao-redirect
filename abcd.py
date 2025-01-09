@@ -194,6 +194,7 @@ def buscar_funcionarios_subordinados():
 
     return {}
 
+
 # Função para listar os subordinados avaliados
 def listar_avaliados_subordinados(conn, quarter=None):
     id_gestor = st.session_state.get('id_emp', None)
@@ -389,30 +390,21 @@ def abcd_page():
         st.session_state['diretoria'] = ""
         st.session_state['data_resposta'] = datetime.today()
 
-    # Inputs de informações do colaborador
     st.header("Preencha as informações abaixo:")
-    subordinados_data = buscar_funcionarios_subordinados()
-    
-    # Certifique-se de que existem subordinados disponíveis
-    if subordinados_data:
-        # Listando apenas os subordinados do gestor logado
-        nome_colaborador = st.selectbox(
-            "Nome do Colaborador",
-            options=[""] + list(subordinados_data.values()),
-            format_func=lambda x: x if x else "Selecione um colaborador"
-        )
-    
-    # Recuperando o id_emp do colaborador selecionado
-    if subordinados_data:  # Verifica se há subordinados disponíveis
-    if nome_colaborador:  # Verifica se um colaborador foi selecionado
-        id_emp = next((key for key, value in subordinados_data.items() if value == nome_colaborador), None)
-    else:  # Nenhum colaborador foi selecionado
-        id_emp = None
-elif not subordinados_data:  # Caso não haja subordinados para o gestor logado
-    st.error("Nenhum subordinado encontrado para o gestor logado.")
-    nome_colaborador = None
-    id_emp = None
 
+    # Buscar colaboradores e subordinados
+    colaboradores_data = buscar_colaboradores()
+    subordinados_data = buscar_funcionarios_subordinados()
+
+    # Inputs de informações do colaborador
+    cols_inputs = st.columns(2)
+
+    with cols_inputs[0]:
+        nome_colaborador = st.selectbox("Nome do Colaborador", options=[""] + list(colaboradores_data.keys()))
+        if nome_colaborador:
+            id_emp = colaboradores_data[nome_colaborador]['id']
+        else:
+            id_emp = None
 
     with cols_inputs[1]:
         nome_gestor = st.text_input("Líder Direto", value=colaboradores_data[nome_colaborador]['gestor'] if nome_colaborador else "", disabled=True)
