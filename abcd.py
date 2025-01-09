@@ -75,7 +75,7 @@ def buscar_colaboradores():
         WHERE Diretor_Gestor = (
             SELECT Nome
             FROM datalake.silver_pny.func_zoom
-            WHERE Diretor_Gestor = 'Grasiele Boff'
+            WHERE Diretor_Gestor = 'Grasiele Bof'
         )
     """)
 
